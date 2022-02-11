@@ -84,15 +84,17 @@ switch ($message) {
         break;
     default:
         $text = $message;
-        $imageApiQuery = urlencode("Коала {$text} {$userConfig[$chatId]['mode']}");
+        $chips = "{$text} {$userConfig[$chatId]['mode']}";
+        $imageApiQuery = urlencode("Коала {$chips}");
+        $chips = urlencode($chips);
         $imageApiKey = $configLocal['serpApiKey'];
 
         // Find a photo
-        $imageApiUrl = "https://serpapi.com/search.json?q={$imageApiQuery}&tbm=isch&ijn=0&api_key={$imageApiKey}";
+        $imageApiUrl = "https://serpapi.com/search.json?q={$imageApiQuery}&chips={$chips}&tbm=isch&ijn=0&api_key={$imageApiKey}";
         $imageApiResultTemp = file_get_contents($imageApiUrl);
         $imageApiResult = json_decode($imageApiResultTemp, true);
 
-        $randomImg = $imageApiResult['images_results'][rand(0, count($imageApiResult['images_results']) - 1)]['original'];
+        $randomImg = $imageApiResult['images_results'][rand(0, 50)]['original'];
 
         $queryParams = [
             'chat_id' => $chatId,
